@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Gestión de Recursos</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="../css/bootstrap.min.css">
+  <!-- Estilos del proyecto -->
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+
+  <style>
+    /* Wrapper centrado */
+    .page-center{
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 12px;
+    }
+
+    /* Card estilo pro */
+    .resource-card{
+      width: 100%;
+      max-width: 760px;
+      border: 0;
+      border-radius: 16px;
+      box-shadow: 0 18px 45px rgba(0,0,0,.12);
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .resource-card-header{
+      padding: 22px 24px;
+      border-bottom: 1px solid rgba(0,0,0,.06);
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .resource-card-header img{
+      width: 130px;
+      height: auto;
+      display: block;
+    }
+
+    .resource-card-header h4{
+      margin: 0;
+      font-weight: 700;
+      letter-spacing: .2px;
+    }
+
+    .resource-card-header small{
+      display: block;
+      margin-top: 4px;
+      color: #6c757d;
+    }
+
+    .resource-card-body{
+      padding: 22px 24px 24px;
+    }
+
+    /* Labels y controles uniformes */
+    .form-label{
+      font-weight: 600;
+      color: #343a40;
+      margin-bottom: 6px;
+    }
+
+    .form-control,
+    .form-select{
+      min-height: 44px;
+      border-radius: 10px;
+    }
+
+    textarea.form-control{
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    /* Barra de acciones */
+    .actions{
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      padding-top: 10px;
+    }
+
+    .btn{
+      border-radius: 10px;
+      min-height: 42px;
+      padding: 10px 16px;
+      font-weight: 600;
+    }
+
+    /* Fondo suave (sin afectar tu plantilla) */
+    body{
+      background: #f5f7fb;
+    }
+  </style>
+</head>
+
+<body class="main-layout">
+
+  <div class="page-center">
+    <div class="resource-card">
+
+      <!-- Header -->
+      <div class="resource-card-header">
+        <img src="../images/logo.png" alt="Logo">
+        <div>
+          <h4>Gestión de Recursos</h4>
+          <small>Crear / Editar recurso</small>
+        </div>
+      </div>
+
+      <!-- Body -->
+      <div class="resource-card-body">
+        <form>
+
+          <div class="row g-3">
+            <!-- Nombre -->
+            <div class="col-md-8">
+              <label for="nombre" class="form-label">Nombre del recurso</label>
+              <input id="nombre" type="text" class="form-control" maxlength="120"
+                     placeholder="Ej: Taladro, Papel, Pintura..." required>
+            </div>
+
+            <!-- Tipo -->
+            <div class="col-md-4">
+              <label for="tipo" class="form-label">Tipo</label>
+              <select id="tipo" class="form-select" required>
+                <option value="" selected>Seleccione</option>
+                <option value="insumo">Insumo</option>
+                <option value="herramienta">Herramienta</option>
+              </select>
+            </div>
+
+            <!-- Descripción -->
+            <div class="col-md-12">
+              <label for="descripcion" class="form-label">Descripción</label>
+              <textarea id="descripcion" class="form-control"
+                        placeholder="Detalle del recurso (opcional)"></textarea>
+            </div>
+
+            <!-- Unidad -->
+            <div class="col-md-4">
+              <label for="unidad" class="form-label">Unidad de medida</label>
+              <input id="unidad" type="text" class="form-control" maxlength="20"
+                     placeholder="Ej: unidades, kg, lt" required>
+            </div>
+
+            <!-- Cantidad -->
+            <div class="col-md-4">
+              <label for="cantidad" class="form-label">Cantidad disponible</label>
+              <input id="cantidad" type="number" class="form-control" min="0" step="0.01"
+                     placeholder="0.00" required>
+            </div>
+
+            <!-- Estado -->
+            <div class="col-md-4">
+              <label for="estado" class="form-label">Estado</label>
+              <select id="estado" class="form-select" required>
+                <option value="operativo" selected>Operativo</option>
+                <option value="mantenimiento">Mantenimiento</option>
+                <option value="inactivo">Inactivo</option>
+              </select>
+            </div>
+
+            <!-- Ubicación -->
+            <div class="col-md-12">
+              <label for="ubicacion" class="form-label">Ubicación</label>
+              <input id="ubicacion" type="text" class="form-control" maxlength="100"
+                     placeholder="Ej: Bodega 1, Estante A, Oficina...">
+            </div>
+          </div>
+
+          <!-- Acciones -->
+          <div class="actions">
+            <button type="reset" class="btn btn-outline-secondary">Limpiar</button>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- JS -->
+  <script src="../js/jquery.min.js"></script>
+  <script src="../js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
