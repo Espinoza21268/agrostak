@@ -8,6 +8,9 @@ class Settings(BaseSettings):
     DB_PORT: int = 3306
     DB_NAME: str = "flor_canela_db"
 
+    JWT_SECRET: str = "cambia_esto_por_algo_largo"
+    JWT_EXPIRES_MIN: int = 120
+
     @property
     def database_url(self) -> str:
         return (
