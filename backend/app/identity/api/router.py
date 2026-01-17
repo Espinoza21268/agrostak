@@ -43,3 +43,7 @@ def eliminar_usuario(id_usuario: int, db: Session = Depends(get_session), _=Depe
 @router.get("/me", response_model=UsuarioRead)
 def me(user=Depends(get_current_user)):
     return UsuarioRead.model_validate(user)
+
+@router.post("/bootstrap/admin", response_model=UsuarioRead)
+def bootstrap_admin(data: UsuarioCreate, db: Session = Depends(get_session)):
+    return services.create_user(db, data)
