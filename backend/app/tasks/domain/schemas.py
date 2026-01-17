@@ -1,0 +1,75 @@
+from pydantic import BaseModel, Field
+from typing import Optional, List
+from datetime import datetime
+from app.tasks.domain.enums import PrioridadTarea, EstadoTarea
+
+
+class TareaCreate(BaseModel):
+    id_tarea_padre: Optional[int] = None
+    titulo: str = Field(..., min_length=3, max_length=150)
+    descripcion: str = Field(..., min_length=3)
+    fecha_inicio_prog: Optional[datetime] = None
+    fecha_fin_prog: Optional[datetime] = None
+    prioridad: PrioridadTarea = PrioridadTarea.media
+    es_recurrente: bool = False
+
+
+class TareaUpdate(BaseModel):
+    titulo: Optional[str] = Field(None, min_length=3, max_length=150)
+    descripcion: Optional[str] = Field(None, min_length=3)
+    fecha_inicio_prog: Optional[datetime] = None
+    fecha_fin_prog: Optional[datetime] = None
+    fecha_fin_real: Optional[datetime] = None
+    prioridad: Optional[PrioridadTarea] = None
+    estado: Optional[EstadoTarea] = None
+    porcentaje_avance: Optional[int] = Field(None, ge=0, le=100)
+    es_recurrente: Optional[bool] = None
+
+
+class TareaRead(BaseModel):
+    id_tarea: int
+    id_tarea_padre: Optional[int]
+    id_creador: int
+    titulo: str
+    descripcion: str
+    fecha_creacion: datetime
+    fecha_inicio_prog: Optional[datetime]
+    fecha_fin_prog: Optional[datetime]
+    fecha_fin_real: Optional[datetime]
+    prioridad: PrioridadTarea
+    estado: EstadoTarea
+    porcentaje_avance: int
+    es_recurrente: bool
+
+    class Config:
+        from_attributes = True
+
+
+class AsignacionCreate(BaseModel):
+    id_usuario: int = Field(..., gt=0)
+
+
+class AsignacionRead(BaseModel):
+    id_asignacion: int
+    id_tarea: int
+    id_usuario: int
+    fecha_asignacion: datetime
+    activo: int
+
+    class Config:
+        from_attributes = True
+
+
+class ComentarioCreate(BaseModel):
+    texto: str = Field(..., min_length=1)
+
+
+class ComentarioRead(BaseModel):
+    id_comentario: int
+    id_tarea: int
+    id_usuario: int
+    texto: str
+    fecha: datetime
+
+    class Config:
+        from_attributes = True
