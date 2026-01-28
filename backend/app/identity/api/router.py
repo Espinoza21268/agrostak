@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.shared.db import get_session
 from app.identity.domain.schemas import (
-    LoginRequest, TokenResponse,
+    LoginRequest, RolRead, TokenResponse,
     UsuarioCreate, UsuarioUpdate, UsuarioRead
 )
 from app.identity.domain import services
@@ -56,3 +56,7 @@ def my_permissions(db=Depends(get_session), user=Depends(get_current_user)):
 @router.get("/menu", response_model=list[MenuItemRead])
 def my_menu(db=Depends(get_session), user=Depends(get_current_user)):
     return services.obtener_menu_usuario(db, user)
+
+@router.get("/roles", response_model=list[RolRead])
+def listar_roles(db=Depends(get_session), user=Depends(get_current_user)):
+    return services.listar_roles(db)

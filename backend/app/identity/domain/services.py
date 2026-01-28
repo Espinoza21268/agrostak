@@ -77,6 +77,10 @@ def delete_user(db: Session, id_usuario: int) -> None:
         raise HTTPException(status_code=404, detail="Usuario no encontrado.")
     repo.delete_user(user)
 
+def listar_roles(db: Session) -> list[RolRead]:
+    repo = IdentityRepository(db)
+    return [RolRead.model_validate(r) for r in repo.list_roles()]
+
 
 def list_users(db: Session) -> list[UsuarioRead]:
     repo = IdentityRepository(db)
