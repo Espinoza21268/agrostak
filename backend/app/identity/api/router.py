@@ -61,6 +61,7 @@ def my_permissions(db=Depends(get_session), user=Depends(get_current_user)):
 def my_menu(db=Depends(get_session), user=Depends(get_current_user)):
     return services.obtener_menu_usuario(db, user)
 
+#lista roles
 @router.get("/roles", response_model=list[RolRead])
 def listar_roles(db=Depends(get_session), user=Depends(get_current_user)):
     return services.listar_roles(db)
