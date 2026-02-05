@@ -7,6 +7,8 @@
   <link rel="stylesheet" href="../../css/bootstrap.min.css">
   <link rel="stylesheet" href="../../css/style.css">
   <link rel="stylesheet" href="../../css/responsive.css">
+  <link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
   <style>
     body{background:#f5f7fb;}
@@ -41,8 +43,12 @@
           </div>
         </div>
         <div class="d-flex gap-2">
-          <button class="btn btn-outline-secondary" id="btnVolver">Volver</button>
-          <button class="btn btn-primary" id="btnCrear">+ Crear rol</button>
+          <button class="btn btn-primary" id="btnHome">
+            <i class="fa-solid fa-house"></i>
+          </button>
+          <button type="button" class="btn btn-primary" id="btnCrear">
+            <i class="fa-solid fa-plus"></i>
+          </button>
         </div>
       </div>
 
@@ -53,7 +59,9 @@
             <input id="busqueda" class="form-control" placeholder="Buscar por nombre o descripción...">
           </div>
           <div class="right d-flex gap-2">
-            <button class="btn btn-outline-secondary" id="btnRefrescar">Refrescar</button>
+            <button class="btn btn-outline-secondary" id="btnRefrescar">
+              <i class="fa-solid fa-rotate-right"></i>
+            </button>
             <button class="btn btn-outline-secondary" id="btnLimpiar">Limpiar</button>
           </div>
         </div>
@@ -137,7 +145,7 @@
     }
 
     document.getElementById("btnCrear").addEventListener("click", () => window.location.href = "./roles.html");
-    document.getElementById("btnVolver").addEventListener("click", () => window.location.href = "./bienvenida.html");
+    document.getElementById("btnHome").addEventListener("click", () => window.location.href = "./../bienvenida_dos.html");
     document.getElementById("btnRefrescar").addEventListener("click", cargar);
     document.getElementById("btnLimpiar").addEventListener("click", () => { busqueda.value=""; aplicar(); });
     busqueda.addEventListener("input", aplicar);

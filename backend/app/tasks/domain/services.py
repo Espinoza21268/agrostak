@@ -54,7 +54,25 @@ def crear_tarea(db: Session, data: TareaCreate, id_creador: int) -> TareaRead:
 
 def listar_tareas(db: Session) -> list[TareaRead]:
     repo = TasksRepository(db)
-    return [TareaRead.model_validate(t) for t in repo.list_tareas()]
+    ##return [TareaRead.model_validate(t) for t in repo.list_tareas()]
+    rows = repo.list_tareas_con_asignado()
+
+    resultado = []
+    for tarea, nombres, apellidos in rows:
+        asignado = None
+        if nombres:
+            asignado = f"{nombres} {apellidos or ''}".strip()
+
+        resultado.append({
+            "id_tarea": tarea.id_tarea,
+            "titulo": tarea.titulo,
+            "estado": tarea.estado,
+            "prioridad": tarea.prioridad,
+            "porcentaje_avance": tarea.porcentaje_avance,
+            "asignado_a": asignado
+        })
+
+    return resultado
 
 
 def obtener_tarea(db: Session, id_tarea: int) -> TareaRead:
@@ -112,6 +130,10 @@ def eliminar_tarea(db: Session, id_tarea: int) -> None:
     tarea = repo.get_tarea(id_tarea)
     if not tarea:
         raise HTTPException(status_code=404, detail="Tarea no encontrada.")
+    tareasAsignadas = repo.list_asignaciones(id_tarea)
+    if len(tareasAsignadas) >= 1:
+        repo.delete_asignacion(tareasAsignadas[0])
+        
     repo.delete_tarea(tarea)
 
 
@@ -120,13 +142,18 @@ def asignar_usuario(db: Session, id_tarea: int, data: AsignacionCreate, id_usuar
     tarea = repo.get_tarea(id_tarea)
     if not tarea:
         raise HTTPException(status_code=404, detail="Tarea no encontrada.")
-
-    asignacion = AsignacionTareaORM(
-        id_tarea=id_tarea,
-        id_usuario=data.id_usuario,
-        activo=1
-    )
-    created = repo.add_asignacion(asignacion)
+    
+    tareasAsignadas = repo.list_asignaciones(id_tarea)
+    if len(tareasAsignadas) >= 1:
+        tareasAsignadas[0].id_usuario = data.id_usuario
+        created = repo.update_asignacion(tareasAsignadas[0])
+    else:
+        asignacion = AsignacionTareaORM(
+            id_tarea=id_tarea,
+            id_usuario=data.id_usuario,
+            activo=1
+        )
+        created = repo.add_asignacion(asignacion)
 
     # historial (opcional)
     repo.add_historial(HistorialEstadoTareaORM(

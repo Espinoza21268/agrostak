@@ -130,3 +130,7 @@ def obtener_menu_usuario(db, user) -> list[MenuItemRead]:
             visibles.append(it)
 
     return [MenuItemRead.model_validate(x) for x in visibles]
+
+def obtener_usuario_por_id(db, id_usuario):
+    repo = IdentityRepository(db)
+    return repo.get_user_by_id(id_usuario)

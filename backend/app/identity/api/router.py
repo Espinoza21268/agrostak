@@ -24,6 +24,10 @@ def login(data: LoginRequest, request: Request, db: Session = Depends(get_sessio
 def listar_usuarios(db: Session = Depends(get_session), _=Depends(get_current_user)):
     return services.list_users(db)
 
+@router.get("/usuarios/porId/{id_usuario}", response_model=UsuarioRead)
+def listar_usuarios(id_usuario: int,db: Session = Depends(get_session), _=Depends(get_current_user)):
+    return services.obtener_usuario_por_id(db,id_usuario)
+
 
 @router.post("/usuarios", response_model=UsuarioRead, status_code=status.HTTP_201_CREATED)
 def crear_usuario(data: UsuarioCreate, db: Session = Depends(get_session), _=Depends(get_current_user)):
