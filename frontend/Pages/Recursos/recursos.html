@@ -156,6 +156,8 @@
                 <option value="kilogramo">Kilogramo (kg) </option>
                 <option value="quintal">Quintal (qq)</option>
                 <option value="tonelada">Tonelada (t)</option>
+                <option value="tonelada">Litros (l)</option>
+                <option value="tonelada">Galones (gl)</option>
               </select>
             </div>
 
@@ -230,6 +232,29 @@
 
   document.getElementById("btnVolver").addEventListener("click", () => window.location.href = "./listarRecursos.html");
 
+  
+  function aplicarReglaUnidad() {
+    const esHerramienta = (tipo.value || "").toLowerCase() === "herramienta";
+    if (esHerramienta) {
+      // limpiar
+      unidad.value = "";
+
+      // bloquear
+      unidad.disabled = true;
+
+      // opcional: evitar validación
+      unidad.required = false;
+    } else {
+      // habilitar
+      unidad.disabled = false;
+
+      // opcional: si tu flujo lo requiere
+      unidad.required = true;
+    }
+  }
+
+  tipo.addEventListener("change", aplicarReglaUnidad);
+
   async function cargarEdicion(){
     if(!id) return;
     try{
@@ -243,6 +268,9 @@
       cantidad.value = recurso.cantidad_disponible ?? 0;
       ubicacion.value = recurso.ubicacion ?? "";
       estado.value = recurso.estado ?? "operativo";
+
+      console.log("Iniciando...");
+      aplicarReglaUnidad();
     }catch(err){
       alert(err.message || "No se pudo cargar el recurso");
     }

@@ -8,7 +8,10 @@ window.APP_CONFIG = {
     RECURSOS: "/recursos",
     ROLES: "/identity/roles",
     USUARIOS: "/identity/usuarios",
-    TAREAS: "/tareas"
+    TAREAS: "/tareas",
+    REPORTES: "/reports",
+    REPORTES_GENERAR: "/reportes/generar",
+    DASHBOARD_SUMMARY: "/reports/dashboard"
   },
   STORAGE: {
     TOKEN_KEY: "omar_access_token",

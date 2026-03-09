@@ -12,6 +12,7 @@ from app.tasks.domain.schemas import (
 from app.tasks.infra.repository import TasksRepository
 from app.tasks.infra.models import TareaORM, AsignacionTareaORM, HistorialEstadoTareaORM, ComentarioTareaORM
 from app.tasks.domain.enums import EstadoTarea
+from app.notifications.infra.onesignal_client import send_task_assigned_push
 
 
 def crear_tarea(db: Session, data: TareaCreate, id_creador: int) -> TareaRead:
@@ -24,16 +25,18 @@ def crear_tarea(db: Session, data: TareaCreate, id_creador: int) -> TareaRead:
 
     if data.fecha_inicio_prog and data.fecha_fin_prog and data.fecha_inicio_prog > data.fecha_fin_prog:
         raise HTTPException(status_code=400, detail="fecha_inicio_prog no puede ser mayor que fecha_fin_prog.")
-
+    print("=======================================>>>>>")
+    print(data)
     tarea = TareaORM(
         id_tarea_padre=data.id_tarea_padre,
         id_creador=id_creador,
         titulo=data.titulo.strip(),
-        descripcion=data.descripcion.strip(),
+        descripcion = data.descripcion.strip() if data.descripcion else None,
         fecha_inicio_prog=data.fecha_inicio_prog,
-        fecha_fin_prog=data.fecha_fin_prog,
+        fecha_fin_prog=data.fecha_fin_real,
+        fecha_fin_real=data.fecha_fin_real,
         prioridad=data.prioridad,
-        estado=EstadoTarea.pendiente,
+        estado = data.estado.lower() if data.estado is not None else EstadoTarea.pendiente,
         porcentaje_avance=0,
         es_recurrente=1 if data.es_recurrente else 0,
     )
@@ -62,14 +65,15 @@ def listar_tareas(db: Session) -> list[TareaRead]:
         asignado = None
         if nombres:
             asignado = f"{nombres} {apellidos or ''}".strip()
-
         resultado.append({
             "id_tarea": tarea.id_tarea,
             "titulo": tarea.titulo,
             "estado": tarea.estado,
             "prioridad": tarea.prioridad,
             "porcentaje_avance": tarea.porcentaje_avance,
-            "asignado_a": asignado
+            "asignado_a": asignado,
+            "fecha_fin_real": tarea.fecha_fin_real,
+            "descripcion": tarea.descripcion
         })
 
     return resultado
@@ -95,6 +99,8 @@ def actualizar_tarea(db: Session, id_tarea: int, data: TareaUpdate, id_usuario: 
         if payload["fecha_inicio_prog"] and payload["fecha_fin_prog"] and payload["fecha_inicio_prog"] > payload["fecha_fin_prog"]:
             raise HTTPException(status_code=400, detail="fecha_inicio_prog no puede ser mayor que fecha_fin_prog.")
 
+    print(payload)
+    tarea.fecha_fin_real = payload.get("fecha_fin_real")
     estado_anterior = tarea.estado
 
     for field in ["titulo", "descripcion", "fecha_inicio_prog", "fecha_fin_prog", "fecha_fin_real", "prioridad", "estado", "porcentaje_avance"]:
@@ -155,6 +161,9 @@ def asignar_usuario(db: Session, id_tarea: int, data: AsignacionCreate, id_usuar
         )
         created = repo.add_asignacion(asignacion)
 
+    # luego de asignar en BD...
+    send_task_assigned_push(data.id_usuario, tarea.titulo, tarea.id_tarea)
+    
     # historial (opcional)
     repo.add_historial(HistorialEstadoTareaORM(
         id_tarea=id_tarea,
